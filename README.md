@@ -6,7 +6,9 @@ Methodology:
 *Dimentionality Reduction
 *clustering
 
-<img width="805" height="805" alt="Screenshot (80)" src="https://github.com">
+![Cell Identification Plot](cell%20identification.png)
+
+
 
 
 
