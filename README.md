@@ -7,6 +7,8 @@ Methodology:
 *clustering (elbow plot, Dimplot,feature plot)
 *Identification plot (heatmap to match the genes with the clusters and the IDs)
 
+![Processing_Plot](Processing_Plot.png)
+
 ![Variation](Variation.png)
 
 ![Heatmap](Heatmap.png)
