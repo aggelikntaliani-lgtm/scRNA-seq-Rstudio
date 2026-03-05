@@ -1,0 +1,37 @@
+!pip install scanpy
+adata = sc.read_csv('GSM5226574_C51ctr_raw_counts.csv.gz').T
+adata
+adata.X.shape
+!pip install scvi-tools
+import scvi
+adata
+sc.pp.filter_genes(adata, min_cells = 10)
+sc.pp.highly_variable_genes(adata, n_top_genes = 2000, subset = True, flavor = 'seurat_v3')
+scvi.model.SCVI.setup_anndata(adata)
+vae = scvi.model.SCVI(adata)
+vae.train()
+solo = scvi.external.SOLO.from_scvi_model(vae)
+solo.train()
+df = solo.predict()
+df['prediction'] = solo.predict(soft = False)
+df
+df.groupby('prediction').count()
+df['dif'] = df.doublet - df.singlet
+df
+import seaborn as sns
+sns.displot(df[df.prediction == 'doublet'], x = 'dif')
+doublets = df[(df.prediction == 'doublet') & (df.dif > 0.4)]
+doublets
+adata = sc.read_csv('GSM5226574_C51ctr_raw_counts.csv.gz').T
+adata.obs['doublet'] = adata.obs.index.isin(doublets.index)
+adata.obs
+adata = adata[~adata.obs.doublet]
+adata
+adata.var['mt'] = adata.var.index.str.startswith('MT-')
+adata.var
+
+
+
+
+
+
