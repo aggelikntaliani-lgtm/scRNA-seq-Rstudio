@@ -64,9 +64,35 @@ adata = adata[adata.obs.pct_counts_ribo < 2]
 adata
 
                                         #Normalization
+adata.X.sum(axis=1)
+sc.pp.normalize_total(adata, target_sum=1e4) #normalize every cell to 10000 UMI
+adata.X.sum(axis=1)
+sc.pp.log1p(adata)  #change to log counts
+adata.X.sum(axis=1)
+adata.raw = adata
 
+                                        #clustering
+sc.pp.highly_variable_genes(adata, n_top_genes= 2000)
+adata.var
+sc.pl.highly_variable_genes(adata)
+adata = adata [:, adata.var.highly_variable]
+sc.pp.regress_out(adata, ['total_counts', 'pct_counts_mt', 'pct_counts_ribo'])
+sc.pp.scale(adata, max_value=10)
 
+sc.tl.pca(adata, svd_solver='arpack')
+sc.pl.pca_variance_ratio(adata, log=True, n_pcs=50)
+sc.pp.neighbors(adata, n_pcs=30)
+adata.obsp['connectivities'].toarray()
+adata.obsp['distances'].toarray()
+sc.tl.umap(adata)
+sc.pl.umap(adata)
 
+!pip install leidenalg
+sc.tl.leiden(adata, resolution=0.5)
+adata.obs
+sc.pl.umap(adata, color=['leiden'])
+
+                                #integration of my 20+ samples
 
 
 
