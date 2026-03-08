@@ -51,6 +51,26 @@ sc.pp.filter_genes(adata, min_cells = 3)
 adata.obs.sort_values('total_counts')
 sc.pp.filter_cells(adata, min_genes = 200)
 
+sc.pl.violin(adata, ['n_genes_by_counts', 'total_counts', 'pct_counts_mt', 'pct_counts_ribo'], 
+             jitter = 0.4, multi_panel = True)
+import numpy as np
+upper_lim = np.quantile(adata.obs.n_genes_by_counts.values, .98)
+#Upper_lim = 3000
+upper_lim
+adata = adata[adata.obs.n_genes_by_counts < upper_lim]
+adata.obs
+adata = adata[adata.obs.pct_counts_mt < 20]
+adata = adata[adata.obs.pct_counts_ribo < 2]
+adata
+
+                                        #Normalization
+
+
+
+
+
+
+
 
 
 
